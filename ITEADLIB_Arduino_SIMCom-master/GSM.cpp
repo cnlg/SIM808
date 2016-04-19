@@ -19,13 +19,6 @@ based on QuectelM10 chip.
 #include "SIM808.h"
 //#include "WideTextFinder.h"
 
-//De-comment this two lines below if you have the
-//first version of GSM GPRS Shield
-//#define _GSM_TXPIN_ 4
-//#define _GSM_RXPIN_ 5
-
-//De-comment this two lines below if you have the
-//second version og GSM GPRS Shield
 
 GSM::GSM(){};
 
@@ -551,9 +544,11 @@ byte GSM::IsInitialized(void)
 }
 
 /**************************************************************/
-char GSM::getBattInf(char *str_perc, char *str_vol)
+char GSM::getBattInf(int &str_perc, int &str_vol)
 {
      char ret_val=0;
+	 char pstr_perc[5];
+	 char pstr_vol[6];
      char *p_char;
      char *p_char1;
 
@@ -569,7 +564,8 @@ char GSM::getBattInf(char *str_perc, char *str_vol)
      if (p_char != NULL) {
           *p_char = 0;
      }
-     strcpy(str_perc, (char *)(p_char1));
+     strcpy(pstr_perc, (char *)(p_char1));
+	 str_perc = atoi(pstr_perc);
 
      //Voltage
      p_char++;
@@ -577,7 +573,8 @@ char GSM::getBattInf(char *str_perc, char *str_vol)
      if (p_char1 != NULL) {
           *p_char1 = 0;
      }
-     strcpy(str_vol, (char *)(p_char));
+     strcpy(pstr_vol, (char *)(p_char));
+	 str_vol = atoi(pstr_vol);
      return ret_val;
 }
 
@@ -631,6 +628,34 @@ char GSM::getGpsStatus(int &gps_status)
      return ret_val;
 }
 
+
+char GSM::setModuleMode(char mode)
+{
+	char ret_val=0;
+	switch(mode){
+		case 1:
+	   if(AT_RESP_OK == gsm.SendATCmdWaitResp("AT+CSCLK=1", 500, 100, "OK", 5)) //睡眠模式
+          ret_val = 1;
+	   break;
+
+	   case 2:
+        if(AT_RESP_OK == gsm.SendATCmdWaitResp("AT+CFUN=0", 500, 100, "OK", 5)) //最小功能模式
+          ret_val = 1;
+	   break;
+
+	   case 3:
+        if(AT_RESP_OK == gsm.SendATCmdWaitResp("AT+CFUN=1", 500, 100, "OK", 5)) //全功能模式
+          ret_val = 1;
+	   break;
+
+	   case 4:
+        if(AT_RESP_OK == gsm.SendATCmdWaitResp("AT+CFUN=4", 500, 100, "OK", 5))  //飞行模式
+          ret_val = 1;
+	   break;
+   } 
+   return ret_val;
+
+}
 
 /**********************************************************
 Method checks if the GSM module is registered in the GSM net

@@ -12,8 +12,8 @@ public:
      char getStat();
      char getPar(char *str_long, char *str_lat, char *str_alt, char *str_time, char *speed);
      void parseTime(char *field, int *time);
-     double convertLat(void);
-     double convertLong(void);
+     double convertLat(char* latString);
+     double convertLong(char* longString);
 };
 
 #endif

@@ -1,29 +1,4 @@
-#include "SIM808.h"
-#include <SoftwareSerial.h>
-//We don't need the http functions. So we can disable the next line.
-//#include "inetGSM.h"
-#include "sms.h"
-#include "call.h"
 
-//To change pins for Software Serial, use the two lines in GSM.cpp.
-
-//GSM Shield for Arduino
-//www.open-electronics.org
-//this code is based on the example of Arduino Labs.
-
-//Simple sketch to check if an incoming call is from an authorized
-//number and in this case, send to this number an SMS with the value
-//of a digital input.
-
-//We have to create the classes for SMSs and calls.
-CallGSM call;
-SMSGSM sms;
-
-char number[20];
-byte stat=0;
-int value=0;
-int pin=1;
-char value_str[5];
 
 void setup()
 {
@@ -36,25 +11,30 @@ void setup()
      //Start configuration of shield with baudrate.
      //For http uses is raccomanded to use 4800 or slower.
      if (gsm.begin()){
-         // Serial.println("\nstatus=READY");
-          while(!gsm.WritePhoneNumber(1,"18750762139","Jason")){
+          //在电话本第1个位置存入电话号码XXXXXXXXXXX，标记为"name"
+          //当使用指定号码拨号和接听的时候需要在电话本中是先存好号码
+          while(!gsm.WritePhoneNumber(1,"18750762139","Jason")){  
           Serial.println("write number failed");
           }
             Serial.println("write number sucessed");
-        //  else
-         // call.Call(1);
+           //Make a phone call
+           //call.Call(1); //拨打电话本1位置的号码
+           //call.Call("XXXXXXXXXXXXXXX"); //拨打电话号码XXXXXXXXXXXX
      }
-     else Serial.println("\nstatus=IDLE");
+     else
+        Serial.println("\nstatus=IDLE");
 };
 
 void loop()
-{
+{     
      //Chekcs status of call
-     stat=call.CallStatusWithAuth(number,1,3);
+     //监听是否是指定电话本中的号码来电
+     stat=call.CallStatusWithAuth(number,1,3); 
      Serial.println(stat);
      //If the incoming call is from an authorized number
      //saved on SIM in the positions range from 1 to 3.
-     if(stat==CALL_INCOM_VOICE_AUTH) {
+     //如果是指定号码的电话来电，挂断电话，通过短信发送引脚1的状态
+     if(stat==CALL_INCOM_VOICE_AUTH) {   
           //Hang up the call.
           call.HangUp();
          // call.PickUp();

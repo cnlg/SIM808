@@ -8,7 +8,7 @@
 
 //#define RESETPIN 12
 
-SIMCOM808 gsm;
+//SIMCOM808 gsm;
 SIMCOM808::SIMCOM808() {};
 SIMCOM808::~SIMCOM808() {};
 
@@ -165,15 +165,16 @@ boolean SIMCOM808::readSMS(char* msg, int msglength, char* number, int nlength)
      char *p_char1;
 
      //_cell.flush();
-     WaitResp(500, 500);
+     //WaitResp(500, 500);
+	 if(AT_RESP_OK != gsm.SendATCmdWaitResp("AT+CMGF=1", 500, 100, "OK", 5))
+          return false;
      SimpleWriteln(F("AT+CMGL=\"REC UNREAD\",1"));
-
      WaitResp(5000, 500);
      if(gsm.IsStringReceived("+CMGL")) {
 
           //index
-          p_char = strchr((char *)(gsm.comm_buf),'+CMGL');
-          p_char1 = p_char+3;  //we are on the first char of string
+          p_char = strchr((char *)(gsm.comm_buf),':');
+          p_char1 = p_char+2;//we are on the first char of string
           p_char = p_char1+1;
           *p_char = 0;
           index=atoi(p_char1);

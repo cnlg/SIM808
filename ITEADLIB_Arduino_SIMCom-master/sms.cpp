@@ -71,7 +71,7 @@ char SMSGSM::SendSMS(char *number_str, char *message_str)
           }
      }
 
-     gsm.SetCommLineStatus(CLS_FREE);
+     //gsm.SetCommLineStatus(CLS_FREE);
      return (ret_val);
 }
 

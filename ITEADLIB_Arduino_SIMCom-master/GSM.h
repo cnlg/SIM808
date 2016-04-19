@@ -222,13 +222,16 @@ public:
      byte CheckRegistration(void);
 
 	 //bat status
-	 char getBattInf(char *str_perc, char *str_vol);
+	 char getBattInf(int &str_perc, int &str_vol);
 
 	 //net status
 	 char getNetStatus(int &net_status);
 
 	 //GPS status
 	 char getGpsStatus(int &gps_status);
+
+	 //Module mode
+	 char setModuleMode(char mode);	 
 	 
      // User button methods
      inline byte IsUserButtonEnable(void) {

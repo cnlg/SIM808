@@ -152,7 +152,7 @@ char GPSGSM::getPar(char *str_long, char *str_lat, char *str_alt, char *str_time
      return ret_val;
 }
 
-void parseTime(char *field, int *time)
+void GPSGSM::parseTime(char *field, int *time)
 {
      ////////////////Time////////////
      char tmp[4];
@@ -184,7 +184,7 @@ void parseTime(char *field, int *time)
 }
 
 // Read the latitude in decimal format from a GGA string
-double convertLat(char* latString)
+double GPSGSM::convertLat(char* latString)
 {
      double latitude = atof(latString);                                    // convert to a double (precise)
      int deg = (int) latitude / 100;                               // extract the number of degrees
@@ -194,7 +194,7 @@ double convertLat(char* latString)
 }
 
 // Read the longitude in decimal format from a GGA string
-double convertLong(char* longString)
+double GPSGSM::convertLong(char* longString)
 {
      double longitude = atof(longString);                                  // convert to a double
      int deg = (int) longitude / 100;                              // extract the number of degrees
